@@ -31,8 +31,8 @@ esp_err_t i2c_init(void) {
   if (i2c_master_get_bus_handle(WATCH_I2C_PORT, &i2c_bus_handle) != ESP_OK) {
     i2c_master_bus_config_t bus_config = {
         .i2c_port = WATCH_I2C_PORT,
-        .sda_io_num = GPIO_NUM_15,
-        .scl_io_num = GPIO_NUM_14,
+        .sda_io_num = WATCH_I2C_SDA_GPIO,
+        .scl_io_num = WATCH_I2C_SCL_GPIO,
         .clk_source = I2C_CLK_SRC_DEFAULT,
         .glitch_ignore_cnt = 7,
         .intr_priority = 0,

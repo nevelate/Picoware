@@ -77,22 +77,19 @@ bool touch_init(void)
         return true; // Already initialized
     }
 
-    // Initialize I2C bus
-    i2c_master_bus_config_t conf = {
-        // I2C bus configuration
-        .i2c_port = WATCH_I2C_PORT,         // Use defined I2C port
-        .sda_io_num = WATCH_I2C_SDA_GPIO,          // SDA pin
-        .scl_io_num = WATCH_I2C_SCL_GPIO,          // SCL pin
-        .clk_source = I2C_CLK_SRC_DEFAULT,   // Default clock source
-        .glitch_ignore_cnt = 7,              // Glitch filter count
-        .flags.enable_internal_pullup = true // Enable internal pull-up resistors
-    };
+    if (i2c_master_get_bus_handle(WATCH_I2C_PORT, &i2c_bus_handle) != ESP_OK) {
+        // Initialize I2C bus
+        i2c_master_bus_config_t conf = {
+            // I2C bus configuration
+            .i2c_port = WATCH_I2C_PORT,         // Use defined I2C port
+            .sda_io_num = WATCH_I2C_SDA_GPIO,          // SDA pin
+            .scl_io_num = WATCH_I2C_SCL_GPIO,          // SCL pin
+            .clk_source = I2C_CLK_SRC_DEFAULT,   // Default clock source
+            .glitch_ignore_cnt = 7,              // Glitch filter count
+            .flags.enable_internal_pullup = true // Enable internal pull-up resistors
+        };
 
-    const esp_err_t i2c_err = i2c_new_master_bus(&conf, &i2c_bus_handle); // Create new I2C bus
-    if (i2c_err != ESP_OK)
-    {
-        printf("touch: I2C initialization failed, %s\n", esp_err_to_name(i2c_err));
-        return false;
+      i2c_new_master_bus(&conf, &i2c_bus_handle);
     }
 
     // I2C panel I/O configuration
